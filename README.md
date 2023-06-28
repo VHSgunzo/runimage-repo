@@ -3,5 +3,5 @@
 ```
 [runimage]
 SigLevel = Optional TrustedOnly
-Server = https://github.com/VHSgunzo/$repo-repo/raw/main/$arch
+Server = https://github.com/VHSgunzo/$repo-repo/releases/download/$arch
 ```

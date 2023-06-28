@@ -7,6 +7,7 @@ for arch in any x86_64
     do
         if [ -d "$arch" ]
             then
+                unset NEWPKG
                 (cd "$arch"
                 rm -f "$repo.db" "$repo.files"
                 repo-add "$repo.db.tar.gz" *.tar.zst
@@ -18,17 +19,8 @@ for arch in any x86_64
                                 mv -v "$repodb.tar.gz" "$repodb"
                         fi
                 done)
+                NEWPKG=($(find $arch -mmin -5 -type f -name "*.pkg.tar.*" -print))
+                [ -n "$NEWPKG" ] && \
+                gh release upload $arch "${NEWPKG[@]}" --clobber
         fi
 done
-
-# git checkout --orphan latest_branch
-# git add -A
-# git commit -am "Update repo"
-# git branch -D main
-# git branch -m main
-# git push -f origin main
-# rm -rf .git/refs/original/
-# git reflog expire --expire=now --all
-# git gc --prune=now
-# git gc --aggressive --prune=now
-# git lfs prune

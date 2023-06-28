@@ -2,12 +2,25 @@
 
 set -e
 
+GREEN='\033[1;92m'
+RESETCOLOR='\033[1;00m'
+
+[ ! -n "$(tty|grep -v 'not a'|grep -Eo 'tty|pts')" ] && \
+    NOT_TERM=1
+
+upload_msg() {
+    echo -e "${GREEN}[ UPLOAD ]: $@ $RESETCOLOR"
+    if [[ "$NOT_TERM" == 1 && "$DONT_NOTIFY" != 1 ]]
+        then notify-send -a '[ UPLOAD ]' "$@" 2>/dev/null &
+    fi
+}
+
 repo=runimage
 for arch in any x86_64
     do
         if [ -d "$arch" ]
             then
-                unset NEWPKG
+                unset newpkg
                 (cd "$arch"
                 rm -f "$repo.db" "$repo.files"
                 repo-add "$repo.db.tar.gz" *.tar.zst
@@ -15,12 +28,15 @@ for arch in any x86_64
                     do
                         if [ -L "$repodb" ]
                             then
-                                rm -fv "$repodb"
-                                mv -v "$repodb.tar.gz" "$repodb"
+                                rm -f "$repodb"
+                                mv "$repodb.tar.gz" "$repodb"
                         fi
                 done)
-                NEWPKG=($(find $arch -mmin -5 -type f -name "*.pkg.tar.*" -print))
-                [ -n "$NEWPKG" ] && \
-                gh release upload $arch "${NEWPKG[@]}" --clobber
+                newpkg=($(find $arch -mmin -5 -type f -print))
+                if [ -n "$newpkg" ]
+                    then
+                        for pkg in "${newpkg[@]}"; do upload_msg "$pkg"; done
+                        gh release upload $arch "${newpkg[@]}" --clobber
+                fi
         fi
 done

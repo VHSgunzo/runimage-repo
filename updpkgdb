@@ -21,14 +21,14 @@ for arch in any x86_64
         fi
 done
 
-git checkout --orphan latest_branch
-git add -A
-git commit -am "Update repo"
-git branch -D main
-git branch -m main
-git push -f origin main
-rm -rf .git/refs/original/
-git reflog expire --expire=now --all
-git gc --prune=now
-git gc --aggressive --prune=now
-git lfs prune
+# git checkout --orphan latest_branch
+# git add -A
+# git commit -am "Update repo"
+# git branch -D main
+# git branch -m main
+# git push -f origin main
+# rm -rf .git/refs/original/
+# git reflog expire --expire=now --all
+# git gc --prune=now
+# git gc --aggressive --prune=now
+# git lfs prune

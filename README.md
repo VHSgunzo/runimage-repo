@@ -1,4 +1,4 @@
-### Repository for [RunImage](https://github.com/VHSgunzo/runimage) container with precompiled packages
+### Repository for [RunImage](https://github.com/VHSgunzo/runimage) container with precompiled packages.
 
 ```
 [runimage]
